@@ -64,14 +64,13 @@ class MoviesRecommendation:
         recommended_movies = self.df.iloc[neighbors][
             ["id", "original_title", "overview", "genre"]
         ]
-        print(recommended_movies)
+        print("Recommended Movies", recommended_movies)
         movies_data = []
         for idx, row in recommended_movies.iterrows():
             movie_data = self.get_movie(row["id"])
             if movie_data:
                 movie_data["genre"] = row["genre"]
                 movies_data.append(movie_data)
-        print("Movies Data:", movies_data)
         return movies_data
 
     def get_movie(self, movie_id):
@@ -79,8 +78,7 @@ class MoviesRecommendation:
         url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=7dfcebf9bdfcef936200eab6622f3fba"
         response = requests.get(url)
         data = response.json()
-        
-        print("Data:", data)
+
         try:
             tagline = data["tagline"]
             title = data["title"]

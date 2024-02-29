@@ -1,33 +1,32 @@
 import streamlit as st
 from recommendation import MoviesRecommendation
 
-class MovieRecommendationApp:
-    def __init__(self):
-        self.movies_recommendation = MoviesRecommendation()
+# Initialize the MoviesRecommendation class
+rec = MoviesRecommendation()
 
-    def main(self):
-        st.title("Movies Recommendation App")
+# Title of the Streamlit app
+st.title('Movie Recommender System')
 
-        user_input = st.text_input("Enter a movie query:", "Spiderman")
-        if st.button("Recommend Movies"):
-            recommended_movies = self.movies_recommendation.recommend(user_input)
+# User input for movie description
+user_input = st.text_area("Enter a movie description to get recommendations:")
 
-            st.subheader("Recommended Movies:")
+# Button to get recommendations
+if st.button('Recommend'):
+    if user_input:
+        # Get recommendations
+        recommendations = rec.recommend(user_input)
+        
+        # Display each recommended movie
+        for movie in recommendations:
+            st.subheader(movie['title'])
+            st.write(f"Tagline: {movie['tagline']}")
+            st.write(f"Overview: {movie['overview']}")
+            st.write(f"Release Date: {movie['release_date']}")
+            if(len(movie["genre"]) >0):
+                genres = ", ".join(movie["genre"])
+            st.image(movie['poster_url'])
+            st.write("---")
+    else:
+        st.write("Please enter a movie description to get recommendations.")
 
-            num_columns = st.columns(3)  # Create responsive columns
-
-            for idx, col in enumerate(num_columns):
-                for movie_index in range(idx, len(recommended_movies), len(num_columns)):
-                    movie = recommended_movies[movie_index]
-                    if movie is not None:
-                        col.markdown(
-                            f"**{movie['title']}**\n"
-                            f"Tagline: {movie['tagline']}\n"
-                            f"Release Date: {movie['release_date']}\n"
-                            f"Overview: {movie['overview']}"
-                        )
-                        col.image(movie['poster_url'], caption=movie['title'], use_column_width=True)
-
-if __name__ == "__main__":
-    app = MovieRecommendationApp()
-    app.main()
+# Run the app with `streamlit run app.py`
